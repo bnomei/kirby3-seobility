@@ -57,20 +57,6 @@ You can also read the score with a pagemethod if you need it in you business log
 echo $page->keywordcheckScore();
 ```
 
-## Robots.txt
-
-Make sure your `robots.txt` allows Seobilitys bot to crawl the website or use my [Robots.txt plugin](https://github.com/bnomei/kirby3-robots-txt) which detects this automatically.
-
-```
-user-agent: *
-disallow: /kirby/
-disallow: /site/
-allow: /media/
-
-user-agent: seobility
-allow: /
-```
-
 ## How it works
 
 The plugin will query the free or paid API and cache the results until the content page is modified or cache expires (see settings below).
