@@ -9,11 +9,11 @@ Kirby::plugin('bnomei/seobility', [
         'expire' => 0, // has a modified check built in
         'cache' => true,
         'free' => [
-            'keywordcheck' => function (string $url, string $keyword) {
+            'keywordcheck' => function (string $url, ?string $keyword = null) {
                 return implode([
                     'https://freetools.seobility.net/de/keywordcheck/check',
                     '?url=' . urlencode($url),
-                    '&keyword=' . str_replace([',',' '], ['','+'], $keyword),
+                    '&keyword=' . str_replace([',',' '], ['','+'], $keyword ?? ''),
                     '&crawltype=1',
                 ]);
             },
@@ -27,7 +27,7 @@ Kirby::plugin('bnomei/seobility', [
             'props' => [],
             'computed' => [
                 'url' => function () {
-                    return option('bnomei.seobility.free.keywordcheck')($this->model, $this->value());
+                    return \Bnomei\Seobility::singleton()->keywordcheck($this->model)['url'];
                 },
                 'keywordcheck' => function () {
                     return $this->model()->keywordcheckScore();
@@ -37,7 +37,7 @@ Kirby::plugin('bnomei/seobility', [
     ],
     'pageMethods' => [
         'keywordcheckScore' => function () {
-            return \Bnomei\Seobility::singleton()->keywordcheck($this, $this->keywordcheck()->value())['score'];
+            return \Bnomei\Seobility::singleton()->keywordcheck($this)['score'];
         },
     ],
 ]);

@@ -2,7 +2,7 @@
   "name": "bnomei/kirby3-seobility",
   "description": "Kirby 3 Plugin to use free and paid API of Seobility.net",
   "type": "kirby-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "authors": [
     {
@@ -17,7 +17,6 @@
     "seo",
     "keyword",
     "check",
-    "sqlite",
     "site",
     "audit",
     "TFIDF",
