@@ -1,0 +1,4 @@
+fields:
+  keywordcheck:
+    label: Seobility.net Keywordcheck
+    type: keywordcheck
