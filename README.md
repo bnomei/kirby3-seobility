@@ -46,7 +46,7 @@ fields:
     type: keywordcheck
 ```
 
-Enter keywords(s) in the panel. Save and get a score.
+Enter keywords(s) in the panel. Save and get a score. Clicking on the score will take you to new browser tab with the full report.
 
 ![keywordcheck](https://raw.githubusercontent.com/bnomei/kirby3-seobility/master/screenshot.png)
 
