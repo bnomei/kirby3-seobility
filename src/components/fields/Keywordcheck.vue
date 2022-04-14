@@ -54,7 +54,7 @@ export default {
       return this.$store.getters["content/hasChanges"]();
     },
     scoreDyn() {
-      return this.hasChanges ? '' : this.score;
+      return this.hasChanges || this.loading ? '' : this.score;
     },
     color() {
       if (!this.score || this.hasChanges) {

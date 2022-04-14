@@ -2,7 +2,7 @@
   "name": "bnomei/kirby3-seobility",
   "description": "Kirby 3 Plugin to use free and paid API of Seobility.net",
   "type": "kirby-plugin",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "authors": [
     {
