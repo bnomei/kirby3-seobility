@@ -70,10 +70,6 @@ export default {
         return 'green';
       }
     },
-    currentLanguage() {
-      let _l = this.$store.state.languages ? this.$store.state.languages.current : null;
-      return _l ? _l.code : false
-    },
   },
 
   methods: {
@@ -81,9 +77,21 @@ export default {
       this.$emit("input", value);
     },
     syncContent() {
+      let contentId = this.$store.getters["content/id"]();
+      let parts = contentId.split('?');
+      let id = parts[0];
+      let lang = false;
+      if (parts.length > 1) {
+        let queryString = new URLSearchParams(parts[1]);
+        for(let pair of queryString.entries()) {
+          if(pair[0] == 'language') {
+            lang = pair[1];
+          }
+        }
+      }
       this.$api.get('seobility/keywordcheck', {
-        id: this.$store.getters["content/id"](),
-        lang: this.currentLanguage,
+        id: id,
+        lang: lang
       })
       .then(response => {
         this.score = response.score

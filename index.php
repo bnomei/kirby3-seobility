@@ -50,7 +50,7 @@ Kirby::plugin('bnomei/seobility', [
                     if ($lang == 'false') {
                         $lang = null;
                     }
-                    $id = ltrim(str_replace(['/pages/','/_drafts/','+',' '], ['/','/','/','/'], $id), '/');
+                    $id = explode('?', ltrim(str_replace(['/pages/','/_drafts/','+',' '], ['/','/','/','/'], $id), '/'))[0];
                     $page = page($id);
                     return $page ? \Bnomei\Seobility::singleton()->keywordcheck(
                         $page,
