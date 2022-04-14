@@ -29,7 +29,7 @@ Kirby::plugin('bnomei/seobility', [
                 'url' => function () {
                     return \Bnomei\Seobility::singleton()->keywordcheck($this->model)['url'];
                 },
-                'keywordcheck' => function () {
+                'score' => function () {
                     return $this->model()->keywordcheckScore();
                 },
             ],
@@ -39,5 +39,26 @@ Kirby::plugin('bnomei/seobility', [
         'keywordcheckScore' => function () {
             return \Bnomei\Seobility::singleton()->keywordcheck($this)['score'];
         },
+    ],
+    'api' => [
+        'routes' => [
+            [
+                'pattern' => 'seobility/keywordcheck',
+                'action'  => function () {
+                    $id = urldecode(get('id'));
+                    $lang = get('lang');
+                    if ($lang == 'false') {
+                        $lang = null;
+                    }
+                    $id = ltrim(str_replace(['/pages/','/_drafts/','+',' '], ['/','/','/','/'], $id), '/');
+                    $page = page($id);
+                    return $page ? \Bnomei\Seobility::singleton()->keywordcheck(
+                        $page,
+                        null, // auto
+                        $page->url($lang)
+                    ) : [];
+                },
+            ],
+        ],
     ],
 ]);

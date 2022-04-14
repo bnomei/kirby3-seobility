@@ -62,9 +62,12 @@ final class Seobility
         if (!$data || intval(A::get($data, 'modified')) < $page->modified()) {
             $score = 0;
             $check = $url ?? $page->url();
-            if ($this->option('apikey')) {
+            if ($page->isDraft() || empty($keyword)) {
+                $check = false;
+            }
+            if ($check && $this->option('apikey')) {
                 // TODO: paid endpoint
-            } else {
+            } elseif ($check) {
                 $url = option('bnomei.seobility.free.keywordcheck')($check, $keyword);
                 $remote = Remote::get($url);
                 if ($remote->code() == 200) {

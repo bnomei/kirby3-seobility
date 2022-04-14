@@ -20,7 +20,7 @@
           :class="['k-input-icon-button keywordcheck', color]"
           tabindex="-1"
           target="_blank"
-          :text="score"
+          :text="scoreDyn"
       />
     </k-input>
   </k-field>
@@ -35,45 +35,64 @@ export default {
     required: Boolean,
     when: String,
     value: String,
-
-    keywordcheck: Number,
+    score: Number,
     url: String,
+    loading: { type: Boolean, default: false },
   },
 
-  /*
-  data() {
-    return {
-
-    };
+  watch: {
+    hasChanges() {
+      // post save or on revert
+      if (!this.hasChanges) {
+        this.syncContent()
+      }
+    }
   },
-  */
 
   computed: {
     hasChanges() {
       return this.$store.getters["content/hasChanges"]();
     },
-    score() {
-      return this.hasChanges ? '' : this.keywordcheck;
+    scoreDyn() {
+      return this.hasChanges ? '' : this.score;
     },
     color() {
-      if (!this.keywordcheck || this.hasChanges) {
+      if (!this.score || this.hasChanges) {
         return 'white';
       }
-      if (this.keywordcheck <= 50) {
+      if (this.score <= 50) {
         return 'red';
       }
-      if (this.keywordcheck <= 80) {
+      if (this.score <= 80) {
         return 'yellow';
       }
-      if (this.keywordcheck > 80) {
+      if (this.score > 80) {
         return 'green';
       }
+    },
+    currentLanguage() {
+      let _l = this.$store.state.languages ? this.$store.state.languages.current : null;
+      return _l ? _l.code : false
     },
   },
 
   methods: {
     onInput(value) {
       this.$emit("input", value);
+    },
+    syncContent() {
+      this.$api.get('seobility/keywordcheck', {
+        id: this.$store.getters["content/id"](),
+        lang: this.currentLanguage,
+      })
+      .then(response => {
+        this.score = response.score
+        this.url = response.url
+        this.loading = false
+      })
+      .catch(error => {
+        this.loading = false
+      })
     }
   },
 };
