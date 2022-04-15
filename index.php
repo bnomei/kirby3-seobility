@@ -9,9 +9,13 @@ Kirby::plugin('bnomei/seobility', [
         'expire' => 0, // has a modified check built in
         'cache' => true,
         'free' => [
-            'keywordcheck' => function (string $url, ?string $keyword = null) {
+            'keywordcheck' => function (string $url, ?string $keyword = null, ?string $lang = null) {
+                $lang = $lang ?? 'en';
+                if (kirby()->languages()->count() > 0 && kirby()->language()->code() === 'de') {
+                    $lang = 'de';
+                }
                 return implode([
-                    'https://freetools.seobility.net/de/keywordcheck/check',
+                    'https://freetools.seobility.net/'.$lang.'/keywordcheck/check',
                     '?url=' . urlencode($url),
                     '&keyword=' . str_replace([',',' '], ['','+'], $keyword ?? ''),
                     '&crawltype=1',
