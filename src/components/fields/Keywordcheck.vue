@@ -23,7 +23,7 @@
           :text="scoreDyn"
       />
     </k-input>
-    <div class="keywordlink">powered by <a href="https://www.seobility.net/en/?ref=kirby3-seobility-plugin">Seobility.net</a></div>
+    <div class="keywordlink">powered by <a href="https://www.seobility.net/en/?ref=kirby3-seobility-plugin" target="_blank">Seobility.net</a></div>
   </k-field>
 </template>
 
