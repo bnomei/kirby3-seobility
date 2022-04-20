@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bnomei;
 
 use Exception;
+use Kirby\Data\Json;
 use Kirby\Http\Remote;
 use Kirby\Toolkit\A;
 
@@ -56,6 +57,14 @@ final class Seobility
 
     public function keywordcheck(\Kirby\Cms\Page $page, ?string $keyword = null, ?string $url = null): array
     {
+        // if has error and not expired yet...
+        if(kirby()->cache('bnomei.seobility')->get('Error')) {
+            return [
+                'modified' => $page->modified(),
+                'score' => 0,
+                'url' => $url,
+            ];
+        }
         $keyword = $keyword ?? $page->keywordcheck()->value();
         $key = md5($page->url() . $keyword);
         $data = kirby()->cache('bnomei.seobility')->get($key);
@@ -69,7 +78,11 @@ final class Seobility
                 // TODO: paid endpoint
             } elseif ($check) {
                 $url = option('bnomei.seobility.free.keywordcheck')($check, $keyword);
-                $remote = Remote::get($url);
+                $remote = Remote::get($url, [
+                    'headers' => [
+                        'X-Kirby3-Seobility-Plugin' => Json::read(__DIR__ . '/../composer.json')['version'],
+                    ],
+                ]);
                 if ($remote->code() == 200) {
                     preg_match_all(
                         '/"data":(.*?),/',
@@ -79,6 +92,12 @@ final class Seobility
                     if ($matches && count($matches[1])) {
                         $score = intval($matches[1][0]);
                     }
+                } elseif ($remote->code() == 451) {
+                    kirby()->cache('bnomei.seobility')->set('Error', 60*24*7);  // minutes
+                } elseif ($remote->code() == 429) {
+                    kirby()->cache('bnomei.seobility')->set('Error', 60);  // minutes
+                } else {
+                    kirby()->cache('bnomei.seobility')->set('Error', 1); // minutes
                 }
             }
 

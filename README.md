@@ -7,10 +7,14 @@
 [![Maintainability](https://flat.badgen.net/codeclimate/maintainability/bnomei/kirby3-seobility)](https://codeclimate.com/github/bnomei/kirby3-seobility) 
 [![Twitter](https://flat.badgen.net/badge/twitter/bnomei?color=66d9ef)](https://twitter.com/bnomei)
 
-Kirby 3 Plugin to use free and paid API of [Seobility.net](https://www.seobility.net/)
+Kirby 3 Plugin to use [Seobility.net](https://www.seobility.net/?ref=kirby3-seobility-plugin)
 
 ## Commercial Usage
 
+> <br>
+> <b>Support Seobility.net</b><br><br>
+> Unless you enter a paid API key this plugin will scrape the web based tools of Seobility.net. They know about this, did send me a really nice email and decided for now not to block the scrapping. Go signup for a account with API access to support them!
+> <br>
 > <br>
 > <b>Support open source!</b><br><br>
 > This plugin is free but if you use it in a commercial project please consider to sponsor me or make a donation.<br>
@@ -31,10 +35,10 @@ Kirby 3 Plugin to use free and paid API of [Seobility.net](https://www.seobility
 
 ## Roadmap
 
-- [x] add features of free api
+- [x] scraper for web based tools (not a free api)
 - [ ] add features of paid api
 
-## Usage free API
+## Usage
 
 Add the field to your blueprint.
 
@@ -59,7 +63,7 @@ echo $page->keywordcheckScore();
 
 ## Robots.txt
 
-If you have a custom `robots.txt`-file or use my plugin make sure the Seobility bot can crawl the website. My [Robots.txt plugin](https://github.com/bnomei/kirby3-robots-txt) must be in **non debug mode**.
+If you have a custom `robots.txt`-file or use my plugin make sure the [Seobility.net](https://www.seobility.net/?ref=kirby3-seobility-plugin) bot can crawl the website. My [Robots.txt plugin](https://github.com/bnomei/kirby3-robots-txt) must be in **non debug mode**.
 
 In a custom `robots.txt`-file add something like this:
 ```
@@ -69,7 +73,7 @@ Allow: /
 
 ## How it works
 
-The plugin will query the free or paid API and cache the results until the content page is modified or cache expires (see settings below).
+The plugin will scrape the web based tools of [Seobility.net](https://www.seobility.net/?ref=kirby3-seobility-plugin) or query your paid API account and cache the results until the content page is modified or cache expires (see settings below).
 
 > ⚠️ EVERY time you press the save button in the panel for a page with this field a request to the API will be made. This might delay saving by a second or two.
 

@@ -19,6 +19,7 @@ Kirby::plugin('bnomei/seobility', [
                     '?url=' . urlencode($url),
                     '&keyword=' . str_replace([',',' '], ['','+'], $keyword ?? ''),
                     '&crawltype=1',
+                    '&ref=kirby3-seobility-plugin',
                 ]);
             },
         ],

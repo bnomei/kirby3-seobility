@@ -23,6 +23,7 @@
           :text="scoreDyn"
       />
     </k-input>
+    <div class="keywordlink">powered by <a href="https://www.seobility.net/en/?ref=kirby3-seobility-plugin">Seobility.net</a></div>
   </k-field>
 </template>
 
@@ -130,5 +131,20 @@ export default {
   }
   .keyword-wrapper .keywordcheck span {
     opacity: 1;
+  }
+  .keyword-wrapper .keywordlink {
+    padding-top: 0.25rem;
+    padding-right: 0.125rem;
+    text-align: right;
+    font-size: var(--text-sm);
+    color: var(--color-gray-600);
+  }
+  .keyword-wrapper .keywordlink a,
+  .keyword-wrapper .keywordlink a:hover,
+  .keyword-wrapper .keywordlink a:visited,
+  .keyword-wrapper .keywordlink a:active {
+    color: var(--color-gray-900);
+    font-weight: var(--font-bold);
+    text-decoration: underline;
   }
 </style>
