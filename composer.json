@@ -50,7 +50,6 @@
     "analyze": "phpstan analyse classes",
     "fix": "php-cs-fixer fix",
     "test": [
-      "composer update",
       "mkdir -p tests/logs",
       "@putenv XDEBUG_MODE=coverage",
       "phpunit --configuration ./phpunit.xml"
