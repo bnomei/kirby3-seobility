@@ -18,6 +18,7 @@ final class Seobility
     {
         $defaults = [
             'debug' => option('debug'),
+            'version' => Json::read(__DIR__ . '/../composer.json')['version'],
             'enabled' => option('bnomei.seobility.enabled'),
             'expire' => intval(option('bnomei.seobility.expire')),
             'apikey' => option('bnomei.seobility.apikey'),
@@ -55,57 +56,66 @@ final class Seobility
         return $this->options;
     }
 
+    public function api(string $url): ?Remote
+    {
+        $remote = Remote::get($url, [
+            'headers' => [
+                'X-Kirby3-Seobility-Plugin' => $this->option('version'),
+            ],
+        ]);
+        if ($remote->code() == 200) {
+            return $remote;
+        } elseif ($remote->code() == 451) {
+            kirby()->cache('bnomei.seobility')->set('Error', 60 * 24 * 7);  // minutes
+        } elseif ($remote->code() == 429) {
+            kirby()->cache('bnomei.seobility')->set('Error', 60);  // minutes
+        } else {
+            kirby()->cache('bnomei.seobility')->set('Error', 1); // minutes
+        }
+        return null;
+    }
+
     public function keywordcheck(\Kirby\Cms\Page $page, ?string $keyword = null, ?string $url = null): array
     {
-        // if has error and not expired yet...
-        if(kirby()->cache('bnomei.seobility')->get('Error')) {
-            return [
-                'modified' => $page->modified(),
-                'score' => 0,
-                'url' => $url,
-            ];
-        }
+        $check = $url ?? $page->url();
         $keyword = $keyword ?? $page->keywordcheck()->value();
-        $key = md5($page->url() . $keyword);
+
+        $default = [
+            'modified' => $page->modified(),
+            'score' => 0,
+            'url' => option('bnomei.seobility.free.keywordcheck')($check, $keyword),
+            'api' => 'default',
+            'keyword' => $keyword,
+            'time' => date('c'),
+        ];
+
+        kirby()->cache('bnomei.seobility')->flush();
+        if ($page->isDraft() || empty($keyword) || kirby()->cache('bnomei.seobility')->get('Error')) {
+            return $default;
+        }
+
+        $key = md5($page->url() . $keyword . $this->option('apikey'));
+
         $data = kirby()->cache('bnomei.seobility')->get($key);
         if (!$data || intval(A::get($data, 'modified')) < $page->modified()) {
-            $score = 0;
-            $check = $url ?? $page->url();
-            if ($page->isDraft() || empty($keyword)) {
-                $check = false;
-            }
-            if ($check && $this->option('apikey')) {
-                // TODO: paid endpoint
-            } elseif ($check) {
-                $url = option('bnomei.seobility.free.keywordcheck')($check, $keyword);
-                $remote = Remote::get($url, [
-                    'headers' => [
-                        'X-Kirby3-Seobility-Plugin' => Json::read(__DIR__ . '/../composer.json')['version'],
-                    ],
-                ]);
-                if ($remote->code() == 200) {
-                    preg_match_all(
-                        '/"data":(.*?),/',
-                        (string) $remote->content(),
-                        $matches
-                    );
-                    if ($matches && count($matches[1])) {
-                        $score = intval($matches[1][0]);
-                    }
-                } elseif ($remote->code() == 451) {
-                    kirby()->cache('bnomei.seobility')->set('Error', 60*24*7);  // minutes
-                } elseif ($remote->code() == 429) {
-                    kirby()->cache('bnomei.seobility')->set('Error', 60);  // minutes
-                } else {
-                    kirby()->cache('bnomei.seobility')->set('Error', 1); // minutes
+            $data = $default;
+            $data['api'] = 'uncached';
+            if ($this->option('apikey') && $remote = $this->api(option('bnomei.seobility.paid.keywordcheck')($check, $keyword))) {
+                $data['score'] = intval(A::get($remote->json(), 'score', 0));
+                $data['api'] = 'paid';
+            } elseif ($remote = $this->api(option('bnomei.seobility.free.keywordcheck')($check, $keyword))) {
+                // scrapper
+                preg_match_all(
+                    '/"data":(.*?),/',
+                    (string)$remote->content(),
+                    $matches
+                );
+                if ($matches && count($matches[1])) {
+                    $data['score'] = intval($matches[1][0]);
                 }
+                $data['api'] = 'free';
             }
 
-            $data = [
-                'modified' => $page->modified(),
-                'score' => $score,
-                'url' => $url,
-            ];
             kirby()->cache('bnomei.seobility')->set($key, $data, $this->option('expire'));
         }
 

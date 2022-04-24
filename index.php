@@ -24,7 +24,16 @@ Kirby::plugin('bnomei/seobility', [
             },
         ],
         'paid' => [
-            // TODO: add paid endpoints
+            // TODO: Keyword, term suggestion and Ranking
+            'keywordcheck' => function (string $url, ?string $keyword = null, ?string $lang = null) {
+                return implode([
+                    'https://api.seobility.net/en/resellerapi/keywordcheck',
+                    '?url=' . urlencode($url),
+                    '&keyword=' . str_replace([',',' '], ['','+'], $keyword ?? ''),
+                    '&apikey=' . \Bnomei\Seobility::singleton()->option('apikey'),
+                    '&ref=kirby3-seobility-plugin',
+                ]);
+            },
         ],
     ],
     'fields' => [
