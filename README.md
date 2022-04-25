@@ -72,6 +72,8 @@ echo $page->keywordcheckScore();
 
 This field is a button to trigger a real time, synchronous (direct) API. The average response time is up to 30 seconds and it will return the rank, title and description as listed on the specified search engine (see settings).
 
+> ⚠️ You need to have a keywordcheck field on the same blueprint and at least one keyword set to get a SERP ranking.
+
 **site/blueprints/default.yml**
 ```yaml
 fields:
@@ -88,6 +90,8 @@ fields:
 ### Term Suggestion (paid)
 
 This field is a button to trigger a term suggestion (more, less, ok) for the specified search engine (see settings).
+
+> ⚠️ You need to have a keywordcheck field on the same blueprint and at least one keyword set to get further term suggestions.
 
 **site/blueprints/default.yml**
 ```yaml
