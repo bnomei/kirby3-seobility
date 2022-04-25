@@ -154,6 +154,45 @@ final class Seobility
         return $data;
     }
 
+    public function termsuggestion(\Kirby\Cms\Page $page, ?string $keyword = null, ?string $url = null): array
+    {
+        $check = $url ?? $page->url();
+        $keyword = $keyword ?? $page->keywordcheck()->value();
+
+        $default = [
+            'modified' => $page->modified(),
+            'more' => '',
+            'less' => '',
+            'ok' => '',
+            // 'keyword' => $keyword,
+        ];
+
+        if (!$this->option('enabled') || empty($this->option('apikey')) ||
+            $page->isDraft() || empty($keyword) ||
+            kirby()->cache('bnomei.seobility')->get('Error')) {
+            return $default;
+        }
+
+        $key = md5('termsuggestion' . $page->url() . $keyword . $this->option('apikey'));
+
+        $data = kirby()->cache('bnomei.seobility')->get($key);
+        if (!$data || intval(A::get($data, 'modified')) < $page->modified()) {
+            $data = $default;
+            if ($remote = $this->api(option('bnomei.seobility.paid.termsuggestion')($check, $keyword))) {
+                if ($termsuggestions = A::get($remote->json(), 'termsuggestions')) {
+                    $data['more'] = A::get($termsuggestions, 'more');
+                    $data['less'] = A::get($termsuggestions, 'less');
+                    $data['ok'] = A::get($termsuggestions, 'ok');
+                    // $data['text'] = A::get($termsuggestions, 'text');
+                }
+            }
+
+            kirby()->cache('bnomei.seobility')->set($key, $data, $this->option('expire'));
+        }
+
+        return $data;
+    }
+
     /** @var Seobility */
     private static $singleton;
 

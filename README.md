@@ -84,6 +84,22 @@ fields:
 
 ![ranking](https://raw.githubusercontent.com/bnomei/kirby3-seobility/master/screenshot-ranking.png)
 
+### Term Suggestion (paid)
+
+This field is a button to trigger a term suggestion (more, less, ok) for the specified search engine (see settings).
+
+**site/blueprints/default.yml**
+```yaml
+fields:
+  termsuggestion:
+    headline: Seobility.net Term Suggestion
+    label: Fetch Term Suggestions
+    progress: Fetching Term Suggestions...
+    type: termsuggestion
+```
+
+![termsuggestion](https://raw.githubusercontent.com/bnomei/kirby3-seobility/master/screenshot-termsuggestion.png)
+
 ## Robots.txt
 
 If you have a custom `robots.txt`-file or use my plugin make sure the [Seobility.net](https://www.seobility.net/?ref=kirby3-seobility-plugin) bot can crawl the website. My [Robots.txt plugin](https://github.com/bnomei/kirby3-robots-txt) must be in **non debug mode**.

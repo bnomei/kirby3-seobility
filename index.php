@@ -25,7 +25,6 @@ Kirby::plugin('bnomei/seobility', [
             },
         ],
         'paid' => [
-            // TODO: Keyword, term suggestion and Ranking
             'keywordcheck' => function (string $url, ?string $keyword = null, ?string $lang = null) {
                 // https://www.seobility.net/static/api/documentation.html#keywordcheck
                 return implode([
@@ -40,6 +39,17 @@ Kirby::plugin('bnomei/seobility', [
                 // https://www.seobility.net/static/api/documentation.html#ranking
                 return implode([
                     'https://api.seobility.net/en/resellerapi/ranking',
+                    '?url=' . urlencode($url),
+                    '&keyword=' . str_replace([',',' '], ['','+'], $keyword ?? ''),
+                    '&searchengine=' . \Bnomei\Seobility::singleton()->option('searchengine'),
+                    '&apikey=' . \Bnomei\Seobility::singleton()->option('apikey'),
+                    '&ref=kirby3-seobility-plugin',
+                ]);
+            },
+            'termsuggestion' => function (string $url, ?string $keyword = null, ?string $lang = null) {
+                // https://www.seobility.net/static/api/documentation.html#termsuggestion
+                return implode([
+                    'https://api.seobility.net/en/resellerapi/termsuggestion',
                     '?url=' . urlencode($url),
                     '&keyword=' . str_replace([',',' '], ['','+'], $keyword ?? ''),
                     '&searchengine=' . \Bnomei\Seobility::singleton()->option('searchengine'),
@@ -65,6 +75,10 @@ Kirby::plugin('bnomei/seobility', [
             ],
         ],
         'ranking' => [
+            'props' => [],
+            'computed' => [],
+        ],
+        'termsuggestion' => [
             'props' => [],
             'computed' => [],
         ],
