@@ -8,6 +8,7 @@ Kirby::plugin('bnomei/seobility', [
         'apikey' => null,
         'expire' => 0, // has a modified check built in
         'cache' => true,
+        'searchengine' => 'google.com',
         'free' => [
             'keywordcheck' => function (string $url, ?string $keyword = null, ?string $lang = null) {
                 $lang = $lang ?? 'en';
@@ -26,10 +27,22 @@ Kirby::plugin('bnomei/seobility', [
         'paid' => [
             // TODO: Keyword, term suggestion and Ranking
             'keywordcheck' => function (string $url, ?string $keyword = null, ?string $lang = null) {
+                // https://www.seobility.net/static/api/documentation.html#keywordcheck
                 return implode([
                     'https://api.seobility.net/en/resellerapi/keywordcheck',
                     '?url=' . urlencode($url),
                     '&keyword=' . str_replace([',',' '], ['','+'], $keyword ?? ''),
+                    '&apikey=' . \Bnomei\Seobility::singleton()->option('apikey'),
+                    '&ref=kirby3-seobility-plugin',
+                ]);
+            },
+            'ranking' => function (string $url, ?string $keyword = null, ?string $lang = null) {
+                // https://www.seobility.net/static/api/documentation.html#ranking
+                return implode([
+                    'https://api.seobility.net/en/resellerapi/ranking',
+                    '?url=' . urlencode($url),
+                    '&keyword=' . str_replace([',',' '], ['','+'], $keyword ?? ''),
+                    '&searchengine=' . \Bnomei\Seobility::singleton()->option('searchengine'),
                     '&apikey=' . \Bnomei\Seobility::singleton()->option('apikey'),
                     '&ref=kirby3-seobility-plugin',
                 ]);
@@ -46,7 +59,14 @@ Kirby::plugin('bnomei/seobility', [
                 'score' => function () {
                     return $this->model()->keywordcheckScore();
                 },
+                'paid' => function () {
+                    return !empty(\Bnomei\Seobility::singleton()->option('apikey'));
+                },
             ],
+        ],
+        'ranking' => [
+            'props' => [],
+            'computed' => [],
         ],
     ],
     'pageMethods' => [
@@ -57,8 +77,8 @@ Kirby::plugin('bnomei/seobility', [
     'api' => [
         'routes' => [
             [
-                'pattern' => 'seobility/keywordcheck',
-                'action'  => function () {
+                'pattern' => 'seobility/(:any)',
+                'action'  => function (string $endpoint) {
                     $id = urldecode(get('id'));
                     $lang = get('lang');
                     if ($lang == 'false') {
@@ -66,7 +86,7 @@ Kirby::plugin('bnomei/seobility', [
                     }
                     $id = explode('?', ltrim(str_replace(['/pages/','/_drafts/','+',' '], ['/','/','/','/'], $id), '/'))[0];
                     $page = page($id);
-                    return $page ? \Bnomei\Seobility::singleton()->keywordcheck(
+                    return $page ? \Bnomei\Seobility::singleton()->{$endpoint}(
                         $page,
                         null, // auto
                         $page->url($lang)

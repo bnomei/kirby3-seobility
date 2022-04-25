@@ -23,7 +23,7 @@
           :text="scoreDyn"
       />
     </k-input>
-    <div class="keywordlink">powered by <a href="https://www.seobility.net/en/?ref=kirby3-seobility-plugin" target="_blank">Seobility.net</a></div>
+    <div v-if="!paid" class="keywordlink">powered by <a href="https://www.seobility.net/en/?ref=kirby3-seobility-plugin" target="_blank">Seobility.net</a></div>
   </k-field>
 </template>
 
@@ -39,6 +39,7 @@ export default {
     score: Number,
     url: String,
     loading: { type: Boolean, default: false },
+    paid: { type: Boolean, default: false },
   },
 
   watch: {
@@ -90,6 +91,7 @@ export default {
           }
         }
       }
+      this.loading = true
       this.$api.get('seobility/keywordcheck', {
         id: id,
         lang: lang
@@ -136,7 +138,7 @@ export default {
     padding-top: 0.25rem;
     padding-right: 0.125rem;
     text-align: right;
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     color: var(--color-gray-600);
   }
   .keyword-wrapper .keywordlink a,

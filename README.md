@@ -13,7 +13,7 @@ Kirby 3 Plugin to use [Seobility.net](https://www.seobility.net/?ref=kirby3-seob
 
 > <br>
 > <b>Support Seobility.net</b><br><br>
-> Unless you enter a paid API key this plugin will scrape the web based tools of Seobility.net. They know about this, did send me a really nice email and decided for now not to block the scrapping. Go signup for a account with API access to support them!
+> Unless you enter a paid API key this plugin will scrape the web based tools of Seobility.net. They know about this, did send me a really nice email and decided for now not to block the scrapping. Go signup for an account with API access to support them! The api is also a tiny bit faster than the scrapper.
 > <br>
 > <br>
 > <b>Support open source!</b><br><br>
@@ -35,11 +35,17 @@ Kirby 3 Plugin to use [Seobility.net](https://www.seobility.net/?ref=kirby3-seob
 
 ## Roadmap
 
-- [x] scraper for web based tools (not a free api)
-- [ ] add features of paid api
+### Scrapper
+- [x] keyword check (scrapper for web based tool, not a free api)
+
+### Paid API
+- [x] keyword check
+- [x] real time SERP ranking
+- [ ] add more features of paid api
 
 ## Usage
 
+### Keyword check (scrapper, paid)
 Add the field to your blueprint.
 
 **site/blueprints/default.yml**
@@ -52,7 +58,7 @@ fields:
 
 Enter keywords(s) in the panel. Save and get a score. Clicking on the score will take you to new browser tab with the full report.
 
-![keywordcheck](https://raw.githubusercontent.com/bnomei/kirby3-seobility/master/screenshot.png)
+![keywordcheck](https://raw.githubusercontent.com/bnomei/kirby3-seobility/master/screenshot-keywordcheck.png)
 
 You can also read the score with a pagemethod if you need it in you business logic.
 
@@ -60,6 +66,23 @@ You can also read the score with a pagemethod if you need it in you business log
 ```php
 echo $page->keywordcheckScore();
 ```
+
+### Real time SERP Ranking (paid)
+
+This field is a button to trigger a real time, synchronous (direct) API. The average response time is up to 30 seconds and it will return the rank, title and description as listed on the specified search engine (see settings).
+
+**site/blueprints/default.yml**
+```yaml
+fields:
+  serpranking:
+    headline: Seobility.net SERP Ranking
+    label: Fetch Rank
+    progress: Fetching Rank...
+    # notranked: Page is not ranked.
+    type: ranking
+```
+
+![ranking](https://raw.githubusercontent.com/bnomei/kirby3-seobility/master/screenshot-ranking.png)
 
 ## Robots.txt
 
@@ -109,11 +132,12 @@ return [
 
 ## Settings
 
-| bnomei.seobility. | Default | Description                                |            
-|-------------------|---------|--------------------------------------------|
-| enabled           | `true`  | but disabled on localhost by default       |
-| expire            | `0`     | will expire on modified or after n-minutes |
-| apikey            | `null`  | string or callback                         |
+| bnomei.seobility. | Default      | Description                                |            
+|-------------------|--------------|--------------------------------------------|
+| enabled           | `true`       | but disabled on localhost by default       |
+| expire            | `0`          | will expire on modified or after n-minutes |
+| apikey            | `null`       | string or callback                         |
+| searchengine      | `google.com` | the target searchengine domain             |
 
 ## Disclaimer
 

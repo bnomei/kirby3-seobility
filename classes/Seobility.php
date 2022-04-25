@@ -22,11 +22,12 @@ final class Seobility
             'enabled' => option('bnomei.seobility.enabled'),
             'expire' => intval(option('bnomei.seobility.expire')),
             'apikey' => option('bnomei.seobility.apikey'),
+            'searchengine' => option('bnomei.seobility.searchengine'),
         ];
         $this->options = array_merge($defaults, $options);
 
         foreach ($this->options as $key => $call) {
-            if (is_callable($call) && in_array($key, ['apikey'])) {
+            if (is_callable($call) && in_array($key, ['apikey', 'searchengine'])) {
                 $this->options[$key] = $call();
             }
         }
@@ -83,26 +84,22 @@ final class Seobility
         $default = [
             'modified' => $page->modified(),
             'score' => 0,
+            // 'keyword' => $keyword,
             'url' => option('bnomei.seobility.free.keywordcheck')($check, $keyword),
-            'api' => 'default',
-            'keyword' => $keyword,
-            'time' => date('c'),
         ];
 
-        kirby()->cache('bnomei.seobility')->flush();
-        if ($page->isDraft() || empty($keyword) || kirby()->cache('bnomei.seobility')->get('Error')) {
+        if (!$this->option('enabled') || $page->isDraft() ||
+            empty($keyword) || kirby()->cache('bnomei.seobility')->get('Error')) {
             return $default;
         }
 
-        $key = md5($page->url() . $keyword . $this->option('apikey'));
+        $key = md5('keywordcheck' . $page->url() . $keyword . $this->option('apikey'));
 
         $data = kirby()->cache('bnomei.seobility')->get($key);
         if (!$data || intval(A::get($data, 'modified')) < $page->modified()) {
             $data = $default;
-            $data['api'] = 'uncached';
             if ($this->option('apikey') && $remote = $this->api(option('bnomei.seobility.paid.keywordcheck')($check, $keyword))) {
                 $data['score'] = intval(A::get($remote->json(), 'score', 0));
-                $data['api'] = 'paid';
             } elseif ($remote = $this->api(option('bnomei.seobility.free.keywordcheck')($check, $keyword))) {
                 // scrapper
                 preg_match_all(
@@ -113,7 +110,42 @@ final class Seobility
                 if ($matches && count($matches[1])) {
                     $data['score'] = intval($matches[1][0]);
                 }
-                $data['api'] = 'free';
+            }
+
+            kirby()->cache('bnomei.seobility')->set($key, $data, $this->option('expire'));
+        }
+
+        return $data;
+    }
+
+    public function ranking(\Kirby\Cms\Page $page, ?string $keyword = null, ?string $url = null): array
+    {
+        $check = $url ?? $page->url();
+        $keyword = $keyword ?? $page->keywordcheck()->value();
+
+        $default = [
+            'modified' => $page->modified(),
+            'rank' => 0,
+            // 'keyword' => $keyword,
+        ];
+
+        if (!$this->option('enabled') || empty($this->option('apikey')) ||
+            $page->isDraft() || empty($keyword) ||
+            kirby()->cache('bnomei.seobility')->get('Error')) {
+            return $default;
+        }
+
+        $key = md5('ranking' . $page->url() . $keyword . $this->option('apikey'));
+
+        $data = kirby()->cache('bnomei.seobility')->get($key);
+        if (!$data || intval(A::get($data, 'modified')) < $page->modified()) {
+            $data = $default;
+            if ($remote = $this->api(option('bnomei.seobility.paid.ranking')($check, $keyword))) {
+                if ($targeturlresult = A::get($remote->json(), 'targeturlresult')) {
+                    $data['rank'] = intval(A::get($targeturlresult, 'rank'));
+                    $data['title'] = A::get($targeturlresult, 'title');
+                    $data['description'] = A::get($targeturlresult, 'description');
+                }
             }
 
             kirby()->cache('bnomei.seobility')->set($key, $data, $this->option('expire'));

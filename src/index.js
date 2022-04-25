@@ -1,8 +1,10 @@
 import Keywordcheck from "./components/fields/Keywordcheck.vue";
+import SerpRanking from "./components/fields/SerpRanking.vue";
 
 window.panel.plugin("bnomei/seobility", {
   fields: {
     keywordcheck: Keywordcheck,
+    ranking: SerpRanking,
   },
   icons: {
     loader:

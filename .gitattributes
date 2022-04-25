@@ -7,4 +7,5 @@
 /.gitignore         export-ignore
 /.travis.yml        export-ignore
 /phpunit.xml        export-ignore
-screenshot.png      export-ignore
+/screenshot-keywordcheck.png      export-ignore
+/screenshot-ranking.png      export-ignore
