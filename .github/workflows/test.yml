@@ -23,7 +23,7 @@ jobs:
           tools: composer
 
       - name: Install
-        run: composer install
+        run: composer install --no-interaction
 
       # update kirby to latest release of version 3 (includes release candidates!)
       # https://semver.mwl.be/#!?package=getkirby%2Fcms&version=3.*&minimum-stability=RC
