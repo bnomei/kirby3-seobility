@@ -41,6 +41,7 @@ Kirby 3 Plugin to use [Seobility.net](https://www.seobility.net/?ref=kirby3-seob
 ### Paid API
 - [x] keyword check
 - [x] real time SERP ranking
+- [x] term suggestion
 - [ ] add more features of paid api
 
 ## Usage
