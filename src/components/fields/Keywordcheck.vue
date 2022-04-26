@@ -62,7 +62,7 @@ export default {
       if (!this.score || this.hasChanges) {
         return 'white';
       }
-      if (this.score <= 50) {
+      if (this.score <= 30) {
         return 'red';
       }
       if (this.score <= 80) {
