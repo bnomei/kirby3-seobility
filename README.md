@@ -68,6 +68,11 @@ You can also read the score with a pagemethod if you need it in you business log
 echo $page->keywordcheckScore();
 ```
 
+To show the score of the `keywordcheck` field the plugin will scrape the web based tools of [Seobility.net](https://www.seobility.net/?ref=kirby3-seobility-plugin) or query your paid API account and cache the results until the content page is modified or cache expires (see settings below).
+
+> ⚠️ EVERY time you press the save button in the panel for a page with this field a request to the API will be made. This might delay saving by a second or two. The paid API is a tiny bit faster.
+
+
 ### Real time SERP Ranking (paid)
 
 This field is a button to trigger a real time, synchronous (direct) API. The average response time is up to 30 seconds and it will return the rank, title and description as listed on the specified search engine (see settings).
@@ -114,12 +119,6 @@ In a custom `robots.txt`-file add something like this:
 User-Agent: seobility
 Allow: /
 ```
-
-## How it works
-
-The plugin will scrape the web based tools of [Seobility.net](https://www.seobility.net/?ref=kirby3-seobility-plugin) or query your paid API account and cache the results until the content page is modified or cache expires (see settings below).
-
-> ⚠️ EVERY time you press the save button in the panel for a page with this field a request to the API will be made. This might delay saving by a second or two.
 
 ## Localhost = No Score
 
