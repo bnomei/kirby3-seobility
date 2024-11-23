@@ -1,4 +1,4 @@
-# Kirby 3 Seobility
+# Kirby Seobility
 
 ![Release](https://flat.badgen.net/packagist/v/bnomei/kirby3-seobility?color=ae81ff)
 ![Downloads](https://flat.badgen.net/packagist/dt/bnomei/kirby3-seobility?color=272822)
@@ -7,25 +7,7 @@
 [![Maintainability](https://flat.badgen.net/codeclimate/maintainability/bnomei/kirby3-seobility)](https://codeclimate.com/github/bnomei/kirby3-seobility) 
 [![Twitter](https://flat.badgen.net/badge/twitter/bnomei?color=66d9ef)](https://twitter.com/bnomei)
 
-Kirby 3 Plugin to use [Seobility.net](https://www.seobility.net/?ref=kirby3-seobility-plugin)
-
-## Commercial Usage
-
-> <br>
-> <b>Support Seobility.net</b><br><br>
-> Unless you enter a paid API key this plugin will scrape the web based tools of Seobility.net. They know about this, did send me a really nice email and decided for now not to block the scrapping. Go signup for an account with API access to support them! The api is also a tiny bit faster than the scrapper.
-> <br>
-> <br>
-> <b>Support open source!</b><br><br>
-> This plugin is free but if you use it in a commercial project please consider to sponsor me or make a donation.<br>
-> If my work helped you to make some cash it seems fair to me that I might get a little reward as well, right?<br><br>
-> Be kind. Share a little. Thanks.<br><br>
-> &dash; Bruno<br>
-> &nbsp; 
-
-| M | O | N | E | Y |
-|---|----|---|---|---|
-| [Github sponsor](https://github.com/sponsors/bnomei) | [Patreon](https://patreon.com/bnomei) | [Buy Me a Coffee](https://buymeacoff.ee/bnomei) | [Paypal dontation](https://www.paypal.me/bnomei/15) | [Hire me](mailto:b@bnomei.com?subject=Kirby) |
+Kirby Plugin to use [Seobility.net](https://www.seobility.net/?ref=kirby3-seobility-plugin)
 
 ## Installation
 
