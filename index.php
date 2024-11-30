@@ -1,6 +1,6 @@
 <?php
 
-@include_once __DIR__ . '/vendor/autoload.php';
+@include_once __DIR__.'/vendor/autoload.php';
 
 Kirby::plugin('bnomei/seobility', [
     'options' => [
@@ -12,13 +12,14 @@ Kirby::plugin('bnomei/seobility', [
         'free' => [
             'keywordcheck' => function (string $url, ?string $keyword = null, ?string $lang = null) {
                 $lang = $lang ?? 'en';
-                if (kirby()->languages()->count() > 0 && kirby()->language()->code() === 'de') {
+                if (kirby()->language() && kirby()->language()->code() === 'de') {
                     $lang = 'de';
                 }
+
                 return implode([
                     'https://freetools.seobility.net/'.$lang.'/keywordcheck/check',
-                    '?url=' . urlencode($url),
-                    '&keyword=' . str_replace([',',' '], ['','+'], $keyword ?? ''),
+                    '?url='.urlencode($url),
+                    '&keyword='.str_replace([',', ' '], ['', '+'], $keyword ?? ''),
                     '&crawltype=1',
                     '&ref=kirby3-seobility-plugin',
                 ]);
@@ -29,9 +30,9 @@ Kirby::plugin('bnomei/seobility', [
                 // https://www.seobility.net/static/api/documentation.html#keywordcheck
                 return implode([
                     'https://api.seobility.net/en/resellerapi/keywordcheck',
-                    '?url=' . urlencode($url),
-                    '&keyword=' . str_replace([',',' '], ['','+'], $keyword ?? ''),
-                    '&apikey=' . \Bnomei\Seobility::singleton()->option('apikey'),
+                    '?url='.urlencode($url),
+                    '&keyword='.str_replace([',', ' '], ['', '+'], $keyword ?? ''),
+                    '&apikey='.\Bnomei\Seobility::singleton()->option('apikey'),
                     '&ref=kirby3-seobility-plugin',
                 ]);
             },
@@ -39,10 +40,10 @@ Kirby::plugin('bnomei/seobility', [
                 // https://www.seobility.net/static/api/documentation.html#ranking
                 return implode([
                     'https://api.seobility.net/en/resellerapi/ranking',
-                    '?url=' . urlencode($url),
-                    '&keyword=' . str_replace([',',' '], ['','+'], $keyword ?? ''),
-                    '&searchengine=' . \Bnomei\Seobility::singleton()->option('searchengine'),
-                    '&apikey=' . \Bnomei\Seobility::singleton()->option('apikey'),
+                    '?url='.urlencode($url),
+                    '&keyword='.str_replace([',', ' '], ['', '+'], $keyword ?? ''),
+                    '&searchengine='.\Bnomei\Seobility::singleton()->option('searchengine'),
+                    '&apikey='.\Bnomei\Seobility::singleton()->option('apikey'),
                     '&ref=kirby3-seobility-plugin',
                 ]);
             },
@@ -50,10 +51,10 @@ Kirby::plugin('bnomei/seobility', [
                 // https://www.seobility.net/static/api/documentation.html#termsuggestion
                 return implode([
                     'https://api.seobility.net/en/resellerapi/termsuggestion',
-                    '?url=' . urlencode($url),
-                    '&keyword=' . str_replace([',',' '], ['','+'], $keyword ?? ''),
-                    '&searchengine=' . \Bnomei\Seobility::singleton()->option('searchengine'),
-                    '&apikey=' . \Bnomei\Seobility::singleton()->option('apikey'),
+                    '?url='.urlencode($url),
+                    '&keyword='.str_replace([',', ' '], ['', '+'], $keyword ?? ''),
+                    '&searchengine='.\Bnomei\Seobility::singleton()->option('searchengine'),
+                    '&apikey='.\Bnomei\Seobility::singleton()->option('apikey'),
                     '&ref=kirby3-seobility-plugin',
                 ]);
             },
@@ -70,7 +71,7 @@ Kirby::plugin('bnomei/seobility', [
                     return $this->model()->keywordcheckScore();
                 },
                 'paid' => function () {
-                    return !empty(\Bnomei\Seobility::singleton()->option('apikey'));
+                    return ! empty(\Bnomei\Seobility::singleton()->option('apikey'));
                 },
             ],
         ],
@@ -92,18 +93,19 @@ Kirby::plugin('bnomei/seobility', [
         'routes' => [
             [
                 'pattern' => 'seobility/(:any)',
-                'action'  => function (string $endpoint) {
-                    $id = urldecode(get('id'));
+                'action' => function (string $endpoint) {
+                    $id = urldecode(strval(get('id')));
                     $lang = get('lang');
                     if ($lang == 'false') {
                         $lang = null;
                     }
-                    $id = explode('?', ltrim(str_replace(['/pages/','/_drafts/','+',' '], ['/','/','/','/'], $id), '/'))[0];
+                    $id = explode('?', ltrim(str_replace(['/pages/', '/_drafts/', '+', ' '], ['/', '/', '/', '/'], $id), '/'))[0];
                     $page = page($id);
+
                     return $page ? \Bnomei\Seobility::singleton()->{$endpoint}(
                         $page,
                         null, // auto
-                        $page->url($lang)
+                        $page->url($lang) // @phpstan-ignore-line
                     ) : [];
                 },
             ],

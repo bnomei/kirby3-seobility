@@ -1,28 +1,22 @@
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 use Bnomei\Seobility;
-use PHPUnit\Framework\TestCase;
 
-final class SeobilityTest extends TestCase
-{
-    public function testConstruct()
-    {
-        $seobility = new Seobility();
-        $this->assertInstanceOf(\Bnomei\Seobility::class, $seobility);
-    }
+test('construct', function () {
+    $seobility = new Seobility;
+    expect($seobility)->toBeInstanceOf(\Bnomei\Seobility::class);
+});
 
-    public function testPageView()
-    {
-        $seobility = new Seobility();
+test('page view', function () {
+    $seobility = new Seobility;
 
-        $data = $seobility->keywordcheck(
-            site()->homePage(),
-            'atomic design',
-            'https://bradfrost.com/blog/post/atomic-web-design/'
-        );
+    $data = $seobility->keywordcheck(
+        site()->homePage(),
+        'atomic design',
+        'https://bradfrost.com/blog/post/atomic-web-design/'
+    );
 
-        $this->assertEquals(75, $data['score']);
-    }
-}
+    expect($data['score'])->toEqual(75);
+});

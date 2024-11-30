@@ -1,4 +1,5 @@
 <?php
+
 /*
 var_dump($page->keywordcheckScore());
 

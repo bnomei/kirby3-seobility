@@ -1,4 +1,7 @@
 fields:
+  text:
+    label: Text
+    type: textarea
   keywordcheck:
     label: Seobility.net Keywordcheck
     type: keywordcheck
