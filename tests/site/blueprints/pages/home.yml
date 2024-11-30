@@ -2,6 +2,21 @@ fields:
   text:
     label: Text
     type: textarea
+
   keywordcheck:
     label: Seobility.net Keywordcheck
     type: keywordcheck
+
+  ranking:
+    headline: Seobility.net SERP Ranking
+    label: Fetch Rank
+    progress: Fetching Rank...
+    # notranked: Page is not ranked.
+    type: ranking
+
+  termsuggestion:
+    headline: Seobility.net Term Suggestion
+    label: Fetch Term Suggestions
+    progress: Fetching Term Suggestions...
+    type: termsuggestion
+

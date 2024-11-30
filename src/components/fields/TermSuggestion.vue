@@ -10,8 +10,9 @@
     >
       <k-button
           v-if="!hasSuggestions"
-          :class="['termsuggestion', loading ? 'loading' : '']"
+          :class="['k-button termsuggestion', loading ? 'loading' : '']"
           :icon="loading ? 'loader' : undefined"
+          variant="filled"
           :disabled="hasChanges"
           @click="onClick"
       >
@@ -91,25 +92,8 @@ export default {
 </script>
 
 <style>
-.termsuggestion {
-  background-color: var(--color-text);
-  color: white;
-  border-radius: 3px;
-  padding: 0.5rem 1rem;
-  line-height: 1.25rem;
-  text-align: left;
-}
-.termsuggestion:hover {
-  background-color: #222;
-}
-.termsuggestion .k-button-text {
-  opacity: 1;
-}
-.termsuggestion.loading {
-  background-color: var(--color-border);
-}
 .termsuggestion.loading .k-button-text {
-  color: var(--color-text);
+  opacity: .5;
 }
 .termsuggestion-field.nobutton .k-field-label {
   padding-bottom: 0;

@@ -131,7 +131,7 @@ return [
 ];
 ```
 
-### Cache
+## Cache
 
 When Kirby's **global** debug config is set to `true` the complete plugin cache will be flushed but caches will still be created.
 

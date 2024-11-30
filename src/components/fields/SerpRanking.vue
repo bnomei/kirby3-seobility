@@ -9,8 +9,9 @@
         :when="when"
     >
       <k-button
-          :class="['ranking', loading ? 'loading' : '']"
+          :class="['k-button ranking', loading ? 'loading' : '']"
           :icon="loading ? 'loader' : undefined"
+          variant="filled"
           :disabled="hasChanges"
           @click="onClick"
       >
@@ -84,25 +85,8 @@ export default {
 </script>
 
 <style>
-.ranking {
-  background-color: var(--color-text);
-  color: white;
-  border-radius: 3px;
-  padding: 0.5rem 1rem;
-  line-height: 1.25rem;
-  text-align: left;
-}
-.ranking:hover {
-  background-color: #222;
-}
-.ranking .k-button-text {
-  opacity: 1;
-}
-.ranking.loading {
-  background-color: var(--color-border);
-}
 .ranking.loading .k-button-text {
-  color: var(--color-text);
+  opacity: .5;
 }
 .ranking-info .table {
   display: flex;

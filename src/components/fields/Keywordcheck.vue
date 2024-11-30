@@ -17,7 +17,8 @@
           :link="url"
           slot="icon"
           :tooltip="$t('open')"
-          :class="['k-input-icon-button keywordcheck', color]"
+          :class="['k-button k-input-icon-button keywordcheck', color]"
+          variant="filled"
           tabindex="-1"
           target="_blank"
           :text="scoreDyn"
@@ -113,15 +114,6 @@ export default {
   .keyword-wrapper {
 
   }
-  .keyword-wrapper .keywordcheck {
-    display: flex;
-    background: var(--color-orange-400);
-    color: #fff;
-    overflow: hidden;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-  }
   .keyword-wrapper .keywordcheck.red {
     background: var(--color-red)
   }
@@ -130,9 +122,6 @@ export default {
   }
   .keyword-wrapper .keywordcheck.green {
     background: var(--color-green)
-  }
-  .keyword-wrapper .keywordcheck span {
-    opacity: 1;
   }
   .keyword-wrapper .keywordlink {
     padding-top: 0.25rem;
