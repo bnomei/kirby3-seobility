@@ -100,7 +100,7 @@ Kirby::plugin('bnomei/seobility', [
                         $lang = null;
                     }
                     $id = explode('?', ltrim(str_replace(['/pages/', '/_drafts/', '+', ' '], ['/', '/', '/', '/'], $id), '/'))[0];
-                    $page = page($id);
+                    $page = kirby()->page($id); // pages and drafts
 
                     return $page ? \Bnomei\Seobility::singleton()->{$endpoint}(
                         $page,

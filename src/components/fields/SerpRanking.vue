@@ -38,7 +38,7 @@ export default {
 
   computed: {
     hasChanges() {
-      return this.$store.getters["content/hasChanges"]();
+      return Object.keys(this.$panel.content.changes()).length > 0;
     },
     info() {
       return this.rank ?
@@ -52,22 +52,10 @@ export default {
 
   methods: {
     onClick() {
-      let contentId = this.$store.getters["content/id"]();
-      let parts = contentId.split('?');
-      let id = parts[0];
-      let lang = false;
-      if (parts.length > 1) {
-        let queryString = new URLSearchParams(parts[1]);
-        for(let pair of queryString.entries()) {
-          if(pair[0] == 'language') {
-            lang = pair[1];
-          }
-        }
-      }
       this.loading = true
       this.$api.get('seobility/ranking', {
-        id: id,
-        lang: lang
+        id: this.$panel.view.props.id,
+        lang: this.$panel?.$language?.code || false,
       })
           .then(response => {
             this.rank = response.rank
