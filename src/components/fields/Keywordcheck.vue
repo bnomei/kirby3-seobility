@@ -54,7 +54,7 @@ export default {
 
   computed: {
     hasChanges() {
-      return Object.keys(this.$panel.content.changes()).length > 0;
+      return Object.keys(this.$panel.content.diff()).length > 0;
     },
     scoreDyn() {
       return this.hasChanges || this.loading ? '' : this.score;

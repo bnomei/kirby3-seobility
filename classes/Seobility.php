@@ -32,7 +32,7 @@ final class Seobility
             }
         }
 
-        if (kirby()->system()->isLocal()) {
+        if ($this->options['enabled'] !== 'force' && kirby()->system()->isLocal()) {
             $this->options['enabled'] = false;
         }
 
@@ -97,17 +97,7 @@ final class Seobility
         if (! $data || intval(A::get($data, 'modified')) < $page->modified()) {
             $data = $default;
             if ($this->option('apikey') && $remote = $this->api(option('bnomei.seobility.paid.keywordcheck')($check, $keyword))) { // @phpstan-ignore-line
-                $data['score'] = intval(A::get($remote->json(), 'score', 0));
-            } elseif ($remote = $this->api(option('bnomei.seobility.free.keywordcheck')($check, $keyword))) { // @phpstan-ignore-line
-                // scrapper
-                preg_match_all(
-                    '/"data":(.*?),/',
-                    (string) $remote->content(),
-                    $matches
-                );
-                if (count($matches[1])) {
-                    $data['score'] = intval($matches[1][0]);
-                }
+                $data['score'] = intval(A::get($remote->json() ?? [], 'score', 0));
             }
 
             kirby()->cache('bnomei.seobility')->set($key, $data, intval($this->option('expire')));
@@ -139,10 +129,21 @@ final class Seobility
         if (! $data || intval(A::get($data, 'modified')) < $page->modified()) {
             $data = $default;
             if ($remote = $this->api(option('bnomei.seobility.paid.ranking')($check, $keyword))) { // @phpstan-ignore-line
-                if ($targeturlresult = A::get($remote->json(), 'targeturlresult')) {
+                $json = $remote->json() ?? [];
+                if ($targeturlresult = A::get($json, 'targeturlresult')) {
                     $data['rank'] = intval(A::get($targeturlresult, 'rank'));
                     $data['title'] = A::get($targeturlresult, 'title');
                     $data['description'] = A::get($targeturlresult, 'description');
+                } else {
+                    foreach (A::get($json, 'results') as $result) {
+                        if (A::get($result, 'link') == A::get($json, 'request.url') ||
+                            A::get($result, 'link') == A::get($json, 'request.url').'/') {
+                            $data['rank'] = intval(A::get($result, 'rank'));
+                            $data['title'] = A::get($result, 'title');
+                            $data['description'] = A::get($result, 'description');
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -177,7 +178,7 @@ final class Seobility
         if (! $data || intval(A::get($data, 'modified')) < $page->modified()) {
             $data = $default;
             if ($remote = $this->api(option('bnomei.seobility.paid.termsuggestion')($check, $keyword))) { // @phpstan-ignore-line
-                if ($termsuggestions = A::get($remote->json(), 'termsuggestions')) {
+                if ($termsuggestions = A::get($remote->json() ?? [], 'termsuggestions')) {
                     $data['more'] = A::get($termsuggestions, 'more');
                     $data['less'] = A::get($termsuggestions, 'less');
                     $data['ok'] = A::get($termsuggestions, 'ok');

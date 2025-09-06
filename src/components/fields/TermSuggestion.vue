@@ -43,7 +43,7 @@ export default {
 
   computed: {
     hasChanges() {
-      return Object.keys(this.$panel.content.changes()).length > 0;
+      return Object.keys(this.$panel.content.diff()).length > 0;
     },
     moreWithIcon() {
       return '<div class="table"><div><svg data-size="32"><use xlink:href="#icon-add"></use></svg></div><div>' + this.more.join(', ') + '</div></div>'

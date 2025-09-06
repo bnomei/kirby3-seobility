@@ -17,11 +17,8 @@ Kirby::plugin('bnomei/seobility', [
                 }
 
                 return implode([
-                    'https://freetools.seobility.net/'.$lang.'/keywordcheck/check',
-                    '?url='.urlencode($url),
-                    '&keyword='.str_replace([',', ' '], ['', '+'], $keyword ?? ''),
-                    '&crawltype=1',
-                    '&ref=kirby3-seobility-plugin',
+                    'https://www.seobility.net/'.$lang.'/keywordcheck',
+                    '?ref=kirby3-seobility-plugin',
                 ]);
             },
         ],

@@ -10,7 +10,7 @@
 [![Buymecoffee](https://flat.badgen.net/badge/icon/donate?icon=buymeacoffee&color=FF813F&label)](https://www.buymeacoffee.com/bnomei)
 
 Kirby Plugin to use [Seobility.net](https://www.seobility.net/?ref=kirby3-seobility-plugin)
-- keyword check (scrapper, paid api)
+- keyword check (paid api)
 - real time SERP ranking (paid api)
 - term suggestion (paid api)
 
@@ -41,7 +41,7 @@ The plugin will not query the API on localhost since the API would not be able t
 
 ## Usage
 
-### Keyword check (scrapper, paid)
+### Keyword check (paid api)
 Add the field `keywordcheck` to your blueprints.
 
 **site/blueprints/default.yml**
@@ -63,7 +63,7 @@ You can also read the score with a PageMethod if you need it in you business log
 echo $page->keywordcheckScore();
 ```
 
-To show the score of the `keywordcheck` field the plugin will scrape the web based tools of [Seobility.net](https://www.seobility.net/?ref=kirby3-seobility-plugin) or query your paid API account and cache the results until the content page is modified or cache expires (see settings below).
+To show the score of the `keywordcheck` field the plugin will query your paid API account and cache the results until the content page is modified or cache expires (see settings below).
 
 > [!TIP]
 > EVERY time you press the save button in the Panel for a page with this field a request to the API will be made. This might delay saving by a second or two. The paid API is a tiny bit faster.
@@ -109,7 +109,7 @@ fields:
 
 ## Paid API
 
-You can set the API-key in the config if you want to use features from the [paid api](https://www.seobility.net/static/api/documentation.html).
+You need to set the API-key in the config if you want to use features from the [paid api](https://www.seobility.net/static/api/documentation.html).
 
 **site/config/config.php**
 ```php
