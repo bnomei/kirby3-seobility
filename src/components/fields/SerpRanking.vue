@@ -18,7 +18,15 @@
         {{ loading ? progress : label }}
       </k-button>
     </k-field>
-    <k-info-field v-if="rank !== undefined" :label="headline" :theme="theme" :text="info" class="ranking-info" />
+    <k-field v-else :label="headline" class="ranking-info">
+      <k-box :theme="theme">
+        <div v-if="rank" class="table">
+          <div>#{{ rank }}</div>
+          <div><b>{{ title }}</b><br>{{ description }}</div>
+        </div>
+        <span v-else>{{ notranked }}</span>
+      </k-box>
+    </k-field>
   </div>
 </template>
 
@@ -31,19 +39,15 @@ export default {
     label: String,
     progress: String,
     notranked: { type: String, default: 'Page is not ranked.' },
-    rank: Number,
     when: String,
-    loading: { type: Boolean, default: false },
+  },
+  data() {
+    return { loading: false, rank: undefined, title: '', description: '' };
   },
 
   computed: {
     hasChanges() {
       return Object.keys(this.$panel.content.diff()).length > 0;
-    },
-    info() {
-      return this.rank ?
-          "<div class='table'><div>#" + this.rank + "</div><div><b>" + this.title + "</b><br>" + this.description + "</div></div>" :
-          this.notranked
     },
     theme() {
       return this.rank > 0 ? 'info' : 'negative'
@@ -55,7 +59,7 @@ export default {
       this.loading = true
       this.$api.get('seobility/ranking', {
         id: this.$panel.view.props.id,
-        lang: this.$panel?.$language?.code || false,
+        lang: this.$panel.language?.code || false,
       })
           .then(response => {
             this.rank = response.rank

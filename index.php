@@ -58,28 +58,9 @@ Kirby::plugin('bnomei/seobility', [
         ],
     ],
     'fields' => [
-        'keywordcheck' => [
-            'props' => [],
-            'computed' => [
-                'url' => function () {
-                    return \Bnomei\Seobility::singleton()->keywordcheck($this->model)['url'];
-                },
-                'score' => function () {
-                    return $this->model()->keywordcheckScore();
-                },
-                'paid' => function () {
-                    return ! empty(\Bnomei\Seobility::singleton()->option('apikey'));
-                },
-            ],
-        ],
-        'ranking' => [
-            'props' => [],
-            'computed' => [],
-        ],
-        'termsuggestion' => [
-            'props' => [],
-            'computed' => [],
-        ],
+        'keywordcheck' => \Bnomei\KeywordCheckField::class,
+        'ranking' => \Bnomei\SeobilityActionField::class,
+        'termsuggestion' => \Bnomei\SeobilityActionField::class,
     ],
     'pageMethods' => [
         'keywordcheckScore' => function () {
