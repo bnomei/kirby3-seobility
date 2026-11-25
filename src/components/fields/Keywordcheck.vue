@@ -13,16 +13,17 @@
       :value="value"
       @input="onInput"
     >
-      <k-button
-          :link="url"
-          slot="icon"
+      <template #icon>
+        <k-button
+          :link="result.url"
           :tooltip="$t('open')"
           :class="['k-button k-input-icon-button keywordcheck', color]"
           variant="filled"
           tabindex="-1"
           target="_blank"
           :text="scoreDyn"
-      />
+        />
+      </template>
     </k-input>
     <div v-if="!paid" class="keywordlink">powered by <a href="https://www.seobility.net/en/?ref=kirby3-seobility-plugin" target="_blank">Seobility.net</a></div>
   </k-field>
@@ -30,6 +31,7 @@
 
 <script>
 export default {
+  emits: ['input'],
   props: {
     disabled: Boolean,
     help: String,
@@ -39,8 +41,11 @@ export default {
     value: String,
     score: Number,
     url: String,
-    loading: { type: Boolean, default: false },
     paid: { type: Boolean, default: false },
+  },
+
+  data() {
+    return { loading: false, fetched: null };
   },
 
   watch: {
@@ -53,23 +58,26 @@ export default {
   },
 
   computed: {
+    result() {
+      return this.fetched || { score: this.score, url: this.url };
+    },
     hasChanges() {
       return Object.keys(this.$panel.content.diff()).length > 0;
     },
     scoreDyn() {
-      return this.hasChanges || this.loading ? '' : this.score;
+      return this.hasChanges || this.loading ? '' : String(this.result.score);
     },
     color() {
-      if (!this.score || this.hasChanges) {
+      if (!this.result.score || this.hasChanges) {
         return 'white';
       }
-      if (this.score <= 30) {
+      if (this.result.score <= 30) {
         return 'red';
       }
-      if (this.score <= 80) {
+      if (this.result.score <= 80) {
         return 'yellow';
       }
-      if (this.score > 80) {
+      if (this.result.score > 80) {
         return 'green';
       }
     },
@@ -83,11 +91,10 @@ export default {
       this.loading = true
       this.$api.get('seobility/keywordcheck', {
         id: this.$panel.view.props.id,
-        lang: this.$panel?.$language?.code || false,
+        lang: this.$panel.language?.code || false,
       })
       .then(response => {
-        this.score = response.score
-        this.url = response.url
+        this.fetched = response
         this.loading = false
       })
       .catch(error => {

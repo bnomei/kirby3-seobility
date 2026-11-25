@@ -29,7 +29,9 @@ class ComposerStaticInitcea638dbefd90d6ad7e09fed23d3fb37
     );
 
     public static $classMap = array (
+        'Bnomei\\KeywordCheckField' => __DIR__ . '/../..' . '/classes/KeywordCheckField.php',
         'Bnomei\\Seobility' => __DIR__ . '/../..' . '/classes/Seobility.php',
+        'Bnomei\\SeobilityActionField' => __DIR__ . '/../..' . '/classes/SeobilityActionField.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Kirby\\ComposerInstaller\\CmsInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/CmsInstaller.php',
         'Kirby\\ComposerInstaller\\Installer' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Installer.php',

@@ -6,7 +6,9 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Bnomei\\KeywordCheckField' => $baseDir . '/classes/KeywordCheckField.php',
     'Bnomei\\Seobility' => $baseDir . '/classes/Seobility.php',
+    'Bnomei\\SeobilityActionField' => $baseDir . '/classes/SeobilityActionField.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Kirby\\ComposerInstaller\\CmsInstaller' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/CmsInstaller.php',
     'Kirby\\ComposerInstaller\\Installer' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/Installer.php',

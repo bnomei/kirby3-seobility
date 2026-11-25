@@ -1,5 +1,9 @@
 <?php
 
+use Bnomei\KeywordCheckField;
+use Bnomei\Seobility;
+use Bnomei\SeobilityActionField;
+
 @include_once __DIR__.'/vendor/autoload.php';
 
 Kirby::plugin('bnomei/seobility', [
@@ -29,7 +33,7 @@ Kirby::plugin('bnomei/seobility', [
                     'https://api.seobility.net/en/resellerapi/keywordcheck',
                     '?url='.urlencode($url),
                     '&keyword='.str_replace([',', ' '], ['', '+'], $keyword ?? ''),
-                    '&apikey='.\Bnomei\Seobility::singleton()->option('apikey'),
+                    '&apikey='.Seobility::singleton()->option('apikey'),
                     '&ref=kirby3-seobility-plugin',
                 ]);
             },
@@ -39,8 +43,8 @@ Kirby::plugin('bnomei/seobility', [
                     'https://api.seobility.net/en/resellerapi/ranking',
                     '?url='.urlencode($url),
                     '&keyword='.str_replace([',', ' '], ['', '+'], $keyword ?? ''),
-                    '&searchengine='.\Bnomei\Seobility::singleton()->option('searchengine'),
-                    '&apikey='.\Bnomei\Seobility::singleton()->option('apikey'),
+                    '&searchengine='.Seobility::singleton()->option('searchengine'),
+                    '&apikey='.Seobility::singleton()->option('apikey'),
                     '&ref=kirby3-seobility-plugin',
                 ]);
             },
@@ -50,40 +54,21 @@ Kirby::plugin('bnomei/seobility', [
                     'https://api.seobility.net/en/resellerapi/termsuggestion',
                     '?url='.urlencode($url),
                     '&keyword='.str_replace([',', ' '], ['', '+'], $keyword ?? ''),
-                    '&searchengine='.\Bnomei\Seobility::singleton()->option('searchengine'),
-                    '&apikey='.\Bnomei\Seobility::singleton()->option('apikey'),
+                    '&searchengine='.Seobility::singleton()->option('searchengine'),
+                    '&apikey='.Seobility::singleton()->option('apikey'),
                     '&ref=kirby3-seobility-plugin',
                 ]);
             },
         ],
     ],
     'fields' => [
-        'keywordcheck' => [
-            'props' => [],
-            'computed' => [
-                'url' => function () {
-                    return \Bnomei\Seobility::singleton()->keywordcheck($this->model)['url'];
-                },
-                'score' => function () {
-                    return $this->model()->keywordcheckScore();
-                },
-                'paid' => function () {
-                    return ! empty(\Bnomei\Seobility::singleton()->option('apikey'));
-                },
-            ],
-        ],
-        'ranking' => [
-            'props' => [],
-            'computed' => [],
-        ],
-        'termsuggestion' => [
-            'props' => [],
-            'computed' => [],
-        ],
+        'keywordcheck' => KeywordCheckField::class,
+        'ranking' => SeobilityActionField::class,
+        'termsuggestion' => SeobilityActionField::class,
     ],
     'pageMethods' => [
         'keywordcheckScore' => function () {
-            return \Bnomei\Seobility::singleton()->keywordcheck($this)['score'];
+            return Seobility::singleton()->keywordcheck($this)['score'];
         },
     ],
     'api' => [
@@ -99,7 +84,7 @@ Kirby::plugin('bnomei/seobility', [
                     $id = explode('?', ltrim(str_replace(['/pages/', '/_drafts/', '+', ' '], ['/', '/', '/', '/'], $id), '/'))[0];
                     $page = kirby()->page($id); // pages and drafts
 
-                    return $page ? \Bnomei\Seobility::singleton()->{$endpoint}(
+                    return $page ? Seobility::singleton()->{$endpoint}(
                         $page,
                         null, // auto
                         $page->url($lang) // @phpstan-ignore-line
