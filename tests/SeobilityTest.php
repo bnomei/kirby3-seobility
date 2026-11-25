@@ -6,7 +6,7 @@ use Bnomei\Seobility;
 
 test('construct', function () {
     $seobility = new Seobility;
-    expect($seobility)->toBeInstanceOf(\Bnomei\Seobility::class);
+    expect($seobility)->toBeInstanceOf(Seobility::class);
 });
 
 test('keyword check reads the score from the paid endpoint', function () {
