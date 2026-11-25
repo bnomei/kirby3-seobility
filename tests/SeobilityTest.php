@@ -11,15 +11,21 @@ test('construct', function () {
 
 test('keyword check reads the score from the paid endpoint', function () {
     $server = proc_open(
-        [PHP_BINARY, '-S', '127.0.0.1:0', '-t', __DIR__.'/fixtures'],
+        [PHP_BINARY, '-n', '-S', '127.0.0.1:0', '-t', __DIR__.'/fixtures'],
         [2 => ['pipe', 'w']],
         $pipes
     );
 
     try {
         stream_set_timeout($pipes[2], 5);
-        $started = fgets($pipes[2]);
-        expect(preg_match('~http://127\.0\.0\.1:\d+~', (string) $started, $address))->toBe(1);
+        $output = '';
+        while (($line = fgets($pipes[2])) !== false) {
+            $output .= $line;
+            if (preg_match('~http://127\.0\.0\.1:\d+~', $line, $address)) {
+                break;
+            }
+        }
+        expect($address[0] ?? null)->not->toBeNull($output);
 
         $kirby = new Kirby(['roots' => ['index' => __DIR__], 'options' => [
             'bnomei.seobility.cache' => ['type' => 'memory'],
